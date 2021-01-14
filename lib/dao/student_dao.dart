@@ -1,13 +1,22 @@
 import 'package:test_functions/db/database.dart';
 import 'package:test_functions/model/student.dart';
+import 'package:uuid/uuid.dart';
 
 class StudentDao{
   final dbProvider = DataBaseProvider.dbProvider;
 
-  Future createStudent(Student student)async{
-    final db =dbProvider.createDataBase();
+  Future<List<Student>> createStudent(Student student)async{
+
+    var uid= Uuid().v1();
+    student.uniqueId=uid;
+Student student1=Student(uniqueId: uid,name: student.name,mobileNo: student.mobileNo);
+    print(student.uniqueId);
+    final db =await dbProvider.createDataBase();
     var result=db.insert("student",student.toStudentMap());
-    return result;
+    print(result);
+
+      return getStudentList();
+
   }
   Future<List<Student>> getStudentList()async{
 final db=await dbProvider.createDataBase();

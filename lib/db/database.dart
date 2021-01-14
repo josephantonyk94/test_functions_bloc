@@ -29,7 +29,8 @@ class DataBaseProvider {
     return await database.execute("CREATE TABLE student ("
         "id INTEGER PRIMARY KEY,"
         "name TEXT, "
-        "mobile_no TEXT "
+        "mobile_no TEXT, "
+        "unique_id"
         ")");
   }
 }

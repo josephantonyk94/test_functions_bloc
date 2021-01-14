@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test_functions/repository/student_repo.dart';
+import 'package:test_functions/screens/student_list_screen.dart';
 
+import 'bloc/student/bloc.dart';
 import 'home.dart';
 
 void main() {
@@ -18,7 +22,10 @@ class MyApp extends StatelessWidget {
 
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: BlocProvider(
+          create: (BuildContext context) =>
+              StudentBloc(studentRepo: StudentRepo()),
+          child: StudentListScreen()),
     );
   }
 }

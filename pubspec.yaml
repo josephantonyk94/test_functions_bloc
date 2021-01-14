@@ -34,6 +34,12 @@ dependencies:
   sqflite:
   path_provider:
   path:
+  uuid:
+  qr_flutter:
+  pdf:
+
+
+
 
 dev_dependencies:
   flutter_test:

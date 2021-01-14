@@ -37,6 +37,8 @@ dependencies:
   uuid:
   qr_flutter:
   pdf:
+  permission_handler: ^5.0.1+1
+
 
 
 

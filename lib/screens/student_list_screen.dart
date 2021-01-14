@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
  import 'package:test_functions/bloc/student/bloc.dart';
 import 'package:test_functions/model/student.dart';
 import 'package:test_functions/screens/student_details.dart';
@@ -14,11 +15,14 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 class StudentListScreen extends StatefulWidget {
+
   @override
   _StudentListScreenState createState() => _StudentListScreenState();
 }
 
 class _StudentListScreenState extends State<StudentListScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     _loadStudent();
@@ -28,7 +32,7 @@ class _StudentListScreenState extends State<StudentListScreen> {
   @override
   Widget build(BuildContext context) {
     List<Student> studentList=[];
-    return Scaffold(
+    return Scaffold(key: _scaffoldKey,
       appBar: AppBar(
         title: Text("Student screen"),
       ),
@@ -168,6 +172,7 @@ class _StudentListScreenState extends State<StudentListScreen> {
     return doc.save();
   }
   _genPdf(List<Student> list) async{
+   await askForPermission();
  Uint8List uint8list=await generateDocument(list);
  savePdf(uint8list);
   }
@@ -178,11 +183,21 @@ class _StudentListScreenState extends State<StudentListScreen> {
       file = File(output+"/example.pdf");
     setState(() {
       file.writeAsBytes(uint8list);
-      print(file.path);
     });
+    
+    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("downloaded")));
   }
-
-
+  Future<bool> askForPermission() async{
+    if (await Permission.storage.isGranted) {
+     print("permission granted"); // Either the permission was already granted before or the user just granted it.
+    } else {
+// You can request multiple permissions at once.
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.storage,
+      ].request();
+      print(statuses[Permission.location]);
+    }
+  }
 
   void _loadStudent() async {
     context.read<StudentBloc>().add(FetchStudent());

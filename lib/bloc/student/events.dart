@@ -8,3 +8,6 @@ final Student student;
 }
 class FetchStudent extends StudentEvents{
 }
+class GenPdf extends StudentEvents{
+}
+class ScanQrCode extends StudentEvents{}

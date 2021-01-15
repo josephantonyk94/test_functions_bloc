@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_functions/dao/student_dao.dart';
+import 'package:test_functions/repository/student_services.dart';
 
 import '../../model/student.dart';
 import '../../repository/student_repo.dart';
@@ -46,7 +47,19 @@ switch(event.runtimeType){
 
   }
   break;
-}
 
+}
+if (event is GenPdf){
+  yield StudentLoadingState();
+  try {
+    studentList= await studentRepo.getStudentList();
+    bool generatedpdf=await genPdf(studentList);
+    if(generatedpdf==true ){
+      yield StudentLoadedState(studentList);
+    }
+  } on Exception catch (e) {
+    // TODO
+  }
+}
   }
 }
